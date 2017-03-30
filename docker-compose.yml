@@ -1,0 +1,30 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: i.am.groot
+      MYSQL_DATABASE: biomedgps
+      MYSQL_USER: biomed
+      MYSQL_PASSWORD: i.am.groot
+    ports:
+      - "3306:3306"
+    volumes:
+#       - ./db_init:/docker-entrypoint-initdb.d
+      - ./mysql-confd:/etc/mysql/conf.d
+      - ./mysql-data:/var/lib/mysql
+    container_name: db
+  django:
+    build: .
+    command: supervisord -n
+    volumes:
+      - ./django:/code
+      - ./www:/var/www
+      - ./nginx-sites-available:/etc/nginx/sites-available
+      - ./supervisor-confd:/etc/supervisor/conf.d
+    ports:
+      - "80:80"
+    links:
+      - db:db
+    container_name: django
+
