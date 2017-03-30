@@ -1,8 +1,8 @@
 # Django, MySQL, uWSGI, and NGINX Docker Environment
 
-This is a kitchen sink Django app environment. It includes everything you need to set up a very basic Django server. I created it as a fast way for myself and team-mates to set up a consistent Django environment for testing and development on our local computers. It works exceptionally well on MacOS and Linux, and can be adapted for Windows with a few minor issues. As presented, this is intended as a testing and development setup
+This is a complete Django app environment with everything you need to deploy a complete Django server on Docker (everything including the kitchen sink). I created it as a fast way for myself and team-mates to set up a consistent Django environment for testing and development on our local computers. It works exceptionally well on MacOS and Linux, and can be adapted for Windows with a few minor tweaks. 
 
-This setup has 2 separate docker containers to make it a little more modular. There is one container with Django, Nginx, and uWSGI managed via supervisord and a second container based on the stock MySQL container. The way this app is laid out, code and most configuration happens from outside the docker containers and so the django app and associated files can be edited live without rebuilding the docker container. You can also restart uwsgi or collect static files without a rebuild. The only configuration which does require a rebuild is actual changes to your python libraries via pip. 
+There are 2 containers to make it a little more modular. There is one container with Django, Nginx, and uWSGI managed via supervisord and a second container based on the stock MySQL container. The way this app is laid out, code and most configuration happens from outside the docker containers and so the django app and associated files can be edited live without rebuilding the docker container. You can also restart uwsgi or collect static files without a rebuild. The only configuration which does require a rebuild is actual changes to your python libraries via pip. 
 
 ### Basic Setup
 
@@ -21,6 +21,8 @@ session and verify the container has started:
     21326497645b        docker_django   "supervisord -n"         6 minutes ago       Up 5 minutes        0.0.0.0:80->80/tcp       django
 
 
+#### Create the Django Project
+
 Your output should be similar to the above with two docker containers running. Lets go into the django 
 container and create the django project.
 
@@ -30,6 +32,10 @@ This puts you in the docker container, in the folder where the environment expec
 the project and the first app as normal:
 
     # django-admin startproject projectname
+
+**Note**: *This setup is geared for a MySQL Server setup, but can be used with any database by replacing the MySQL container settings in `docker-compose.yml`. For the simplest setup, comment out the mysql section in docker-compose.yml and use the default SQLLite configuration that comes with Django. In that case, there is no database setup, Django will create a SQLLite database in the code directory and you can skip to the section below on creating your first migration.
+
+#### Configure MySQL Server
 
 Before bringing the database container online, set the database name, user, and password. Stop the django docker container, then edit `docker-compose.yml` and set the passwords to something a little more secure than the existing. Optionally, change the database name and username.
 
@@ -51,18 +57,20 @@ Next, edit `settings.py` (likely `django/<projectname>/<projectname>/settings.py
         }
     }
 
-Now we can bring our whole environment up:
+#### Creating the Initial Django Migration
+
+Bring the complete docker environment up:
 
     $ docker-compose up
 
-Docker is still in the foreground so fire up another terminal and lets check to see if everything is connected properly by running our initial django migrations:
+Docker is still in the foreground so fire up another terminal and check to see if everything is connected properly by running the initial django migrations:
 
     $ docker exec -it django /bin/bash
 
     # cd projectname
     # python manage.py migrate
 
-At this point, you can create an app and use your django environment as normal. You can stop the docker containers and run them in the background with `docker-compose up -d`.
+At this point, the django setup is complete and you can get started with working on your actual django code. You can stop the docker containers and run them in the background with `docker-compose up -d`.
 
 ### Managing your environment
 
