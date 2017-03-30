@@ -3,10 +3,9 @@
 - [Introduction](#introduction)
 - [Getting started](#basic-setup)
 - [Maintenance](#managing-your-environment)
-  - Run commands from outside the docker environment
-  - Run the Django Shell
+  - [Using Manage.py from outside the container](#run-managepy-commands-from-outside-the-container)
   - [Restart uWSGI](#restart-uwsgi-after-a-source-change)
-  - Get a MySQL command prompt
+  - [MySQL command prompt](#the-mysql-prompt)
 
 # Introduction
 
