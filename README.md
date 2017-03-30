@@ -1,16 +1,7 @@
 # Django, MySQL, uWSGI, and NGINX Docker Environment
 
 - [Introduction](#introduction)
-  - [Contributing](#contributing)
-  - [Issues](#issues)
-- [Getting started](#getting-started)
-  - [Installation](#installation)
-  - [Quickstart](#quickstart)
-  - [Command-line arguments](#command-line-arguments)
-  - [Persistence](#persistence)
-  - [Configuration](#configuration)
-  - [Usage](#usage)
-  - [Logs](#logs)
+- [Getting started](#basic-setup)
 - [Maintenance](#managing-your-environment)
   - Run commands from outside the docker environment
   - Run the Django Shell
