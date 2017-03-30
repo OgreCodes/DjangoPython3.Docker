@@ -4,13 +4,10 @@ services:
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: i.am.groot
-      MYSQL_DATABASE: biomedgps
-      MYSQL_USER: biomed
-      MYSQL_PASSWORD: i.am.groot
-    ports:
-      - "3306:3306"
+      MYSQL_DATABASE: django
+      MYSQL_USER: django
+      MYSQL_PASSWORD: g.r.o.o.t.
     volumes:
-#       - ./db_init:/docker-entrypoint-initdb.d
       - ./mysql-confd:/etc/mysql/conf.d
       - ./mysql-data:/var/lib/mysql
     container_name: db
