@@ -2,6 +2,7 @@
 
 - [Introduction](#introduction)
   - [Assumptions](#assumptions)
+  - [Structure](#structure)
 - [Getting started](#basic-setup)
 - [Maintenance](#managing-your-environment)
   - [Using Manage.py from outside the container](#run-managepy-commands-from-outside-the-container)
