@@ -4,7 +4,7 @@ services:
     build: .
     command: supervisord -n
     volumes:
-      - ./django:/code
+      - ./code:/code
       - ./www:/var/www
       - ./nginx-sites-available:/etc/nginx/sites-available
       - ./supervisor-confd:/etc/supervisor/conf.d

@@ -1,6 +1,7 @@
 # Django, MySQL, uWSGI, and NGINX Docker Environment
 
 - [Introduction](#introduction)
+  - [Assumptions](#assumptions)
 - [Getting started](#basic-setup)
 - [Maintenance](#managing-your-environment)
   - [Using Manage.py from outside the container](#run-managepy-commands-from-outside-the-container)
@@ -13,9 +14,28 @@ This is a complete Django app environment with everything you need to deploy a c
 
 There are 2 containers to make it a little more modular. There is one container with Django, Nginx, and uWSGI managed via supervisord and a second container based on the stock MySQL container. The way this app is laid out, code and most configuration happens from outside the docker containers and so the django app and associated files can be edited live without rebuilding the docker container. You can also restart uwsgi or collect static files without a rebuild. The only configuration which does require a rebuild is actual changes to your python libraries via pip. 
 
+## Assumptions
+
+This guide is written with the assumption the reader understands the Unix command line and the basics of using docker. Familiarity with MySQL and Django is also very helpful. This guide also assumes you have a functioning docker environment with at least 1 GB of free drive space.
+
+## Structure
+
+- Dockerfile
+- docker-compose.yml  
+- README.md 
+
+- requirements.txt - pip configuration for Django server
+
+- code/ - This is where your django project will live
+- mysql-confd/ - Customize your MySQL Server here
+- mysql-data/ - MySQL data files.      
+- nginx-sites-available/ - NGinx site configuration
+- supervisor-confd/ - Startup configuration for Nginx and uWSGI
+- www/ - Static files served by Nginx
+
 ## Basic Setup
 
-This readme walks through setting up a new Django environment for a newly created Django project. If you are using an existing project, these instructions should be easy to adapt. Most of these instructions assume you have cloned this repository and paths are relative to the topmost folder in the repository. 
+This readme walks through setting up a new Django environment for a newly created Django project. If you are using an existing project, these instructions should be easy to adapt. These instructions assume there is a local clone of this repository and paths are relative to the topmost folder of the repository. 
 
 Start by building and running the Django container:
     
@@ -57,7 +77,7 @@ To set up MySQL, stop the django container with `CTRL-C` or `docker-compose stop
 
 **Note:** *Careful when uncommenting those lines, YML is very picky about indent levels.*
 
-Next, edit `settings.py` (likely `django/<projectname>/<projectname>/settings.py`) and paste the following in place of the existing `DATABASES` section, using the user password you set above. If you changed the database name or username, make sure you carry those changes forward as well: 
+Next, edit `settings.py` (likely `code/<projectname>/<projectname>/settings.py`) and paste the following in place of the existing `DATABASES` section, using the user password you set above. If you changed the database name or username, make sure you carry those changes forward as well: 
 
     DATABASES = {
         'default': {
@@ -70,11 +90,13 @@ Next, edit `settings.py` (likely `django/<projectname>/<projectname>/settings.py
         }
     }
 
-### Creating the Initial Migration
-
-Bring the complete docker environment up:
+Now bring the complete docker/ MySQL environment up:
 
     $ docker-compose up
+
+On first start, MySQL takes a bit longer to start because it's creating the database structure. 
+
+### Creating the Initial Migration
 
 Docker is still in the foreground so fire up another terminal and check to see if everything is connected properly by running the initial django migrations:
 
