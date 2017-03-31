@@ -62,7 +62,7 @@ In order for uwsgi to talk to the django project, the `uwsgi.ini` file in the dj
 
 ### Configure MySQL Server
 
-**Note:** *Setting up MySQL Server is optional. If you don't need MySQL, skip to [Creating the Initial Django Migration](#creating-the-initial-migration) and Django will automatically create an SQLLite database under `/code' for you.*
+**Note:** *Setting up MySQL Server is optional. If MySQL isn't required, skip to [Creating the Initial Django Migration](#creating-the-initial-migration) and Django will automatically create an SQLLite database in the topmost folder of the django project.*
 
 To set up MySQL, stop the django container with `CTRL-C` or `docker-compose stop`; then open `docker-compose.yml` and uncomment the db settings and the links section under the django settings and set the database name, user, and password. 
 
@@ -73,7 +73,7 @@ To set up MySQL, stop the django container with `CTRL-C` or `docker-compose stop
 
 **Note:** *Careful when uncommenting those lines, YML is very picky about indent levels.*
 
-Next, edit `settings.py` (likely `code/<projectname>/<projectname>/settings.py`) and paste the following in place of the existing `DATABASES` section, using the user password you set above. If you changed the database name or username, make sure you carry those changes forward as well: 
+Next, edit `settings.py` (likely `code/<projectname>/<projectname>/settings.py`) and paste the following in place of the existing `DATABASES` section, using the user password set above. Carry any database name or username settings forward as well: 
 
     DATABASES = {
         'default': {
