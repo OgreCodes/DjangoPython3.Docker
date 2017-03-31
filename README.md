@@ -20,18 +20,13 @@ This guide is written with the assumption the reader understands the Unix comman
 
 ## Structure
 
-- Dockerfile
-- docker-compose.yml  
-- README.md 
-
-- requirements.txt - pip configuration for Django server
-
-- code/ - This is where your django project will live
-- mysql-confd/ - Customize your MySQL Server here
-- mysql-data/ - MySQL data files.      
-- nginx-sites-available/ - NGinx site configuration
-- supervisor-confd/ - Startup configuration for Nginx and uWSGI
-- www/ - Static files served by Nginx
+    requirements.txt - pip configuration for Django server
+    code/ - This is where your django project will live
+    mysql-confd/ - Customize your MySQL Server here
+    mysql-data/ - MySQL data files.      
+    nginx-sites-available/ - NGinx site configuration
+    supervisor-confd/ - Startup configuration for Nginx and uWSGI
+    www/ - Static files served by Nginx
 
 ## Basic Setup
 
