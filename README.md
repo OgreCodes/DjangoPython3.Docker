@@ -3,7 +3,12 @@
 - [Introduction](#introduction)
   - [Assumptions](#assumptions)
   - [Structure](#structure)
-- [Getting started](#basic-setup)
+- [Getting Started](#basic-setup)
+  - [Create the Django Project](#create-the-django-project)
+  - [uWSGI Setup](#connect-uwsgi-to-your-project)
+  - [MySQL Server](#mysql-server) (Optional)
+  - [Initial Migration](#initial-migration)
+  - [Static Files](#static-files)
 - [Maintenance](#managing-your-environment)
   - [Using Manage.py from outside the container](#run-managepy-commands-from-outside-the-container)
   - [Restart uWSGI](#restart-uwsgi-after-a-source-change)
@@ -60,7 +65,7 @@ In order for uwsgi to talk to the django project, the `uwsgi.ini` file in the dj
     # Change this to your wsgi module. Probably "projectname.wsgi".
     module          = <projectname>.wsgi:application
 
-### Configure MySQL Server
+### MySQL Server
 
 **Note:** *Setting up MySQL Server is optional. If MySQL isn't required, skip to [Creating the Initial Django Migration](#creating-the-initial-migration) and Django will automatically create an SQLLite database in the topmost folder of the django project.*
 
@@ -92,7 +97,7 @@ Now bring the complete docker/ MySQL environment up:
 
 On first start, MySQL takes a bit longer to start because it's creating the database structure. 
 
-### Creating the Initial Migration
+### Initial Migration
 
 Docker is still in the foreground so fire up another terminal and check to see if everything is connected properly by running the initial django migrations:
 
