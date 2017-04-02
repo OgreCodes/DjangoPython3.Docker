@@ -16,7 +16,7 @@
 
 # Introduction
 
-This is a complete Django app environment with everything you need to deploy a complete Django server on Docker (everything including the kitchen sink). I created it as a fast way for myself and team-mates to set up a consistent Django environment for testing and development on our local computers. It works exceptionally well on MacOS and Linux, and can be adapted for Windows with a few minor tweaks. 
+This is a complete Django app environment with everything you need to deploy a complete Django server on Docker (everything including the kitchen sink). I created it as a fast way for myself and team-mates to set up a consistent Django environment for testing and development on our local computers. It works exceptionally well on MacOS and Linux, and can be adapted for Windows with a few minor tweaks. This document is designed to walk through all the steps required to get a complete environment up and running quickly (10-15 minutes).
 
 There are 2 containers to make it a little more modular. There is one container with Django, Nginx, and uWSGI managed via supervisord and a second container based on the stock MySQL container. The way this app is laid out, code and most configuration happens from outside the docker containers and so the django app and associated files can be edited live without rebuilding the docker container. You can also restart uwsgi or collect static files without a rebuild. The only configuration which does require a rebuild is actual changes to your python libraries via pip. 
 
@@ -108,7 +108,7 @@ Docker is still in the foreground so fire up another terminal and check to see i
 
 ### Static Files
 
-The Nginx server is configured to serve static files, add the STATIC_ROOT setting to `settings.py` so the Django knows where to collect static files:
+The Nginx server is configured to serve static files, add the `STATIC_ROOT` setting to `settings.py` so the Django knows where to collect static files:
 
     STATIC_ROOT = '/var/www/static/'
 
