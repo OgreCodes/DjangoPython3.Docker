@@ -1,6 +1,6 @@
 
 upstream django {
-    server unix:/tmp/app.sock; # for a file socket
+    server unix:/tmp/uwsgi.sock; # for a file socket
     }
 
 # configuration of the server
