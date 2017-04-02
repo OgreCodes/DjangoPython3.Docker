@@ -101,6 +101,12 @@ Docker is still in the foreground so fire up another terminal and check to see i
     # cd projectname
     # python manage.py migrate
 
+### Static Files
+
+The Nginx server is configured to serve static files, add the STATIC_ROOT setting to `settings.py` so the Django knows where to collect static files:
+
+    STATIC_ROOT = '/var/www/static/'
+
 At this point, the django setup is complete and you can get started with working on your actual django code. You can stop the docker containers and run them in the background with `docker-compose up -d`.
 
 ## Managing your environment
@@ -121,11 +127,15 @@ Run the Django Shell directly:
 
 Run tests for an app:
 
-    docker exec django /usr/bin/python projectname/manage.py test appname --keepdb
+    docker exec django python projectname/manage.py test appname --keepdb
 
 Run a migration:
 
-    docker exec django /usr/bin/python projectname/manage.py migrate appname
+    docker exec django python projectname/manage.py migrate appname
+
+Collect Static Files:
+
+    docker exec django python projectname/manage.py collectstatic
 
 #### The MySQL Prompt:
 
