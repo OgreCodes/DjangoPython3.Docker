@@ -108,9 +108,13 @@ Docker is still in the foreground so fire up another terminal and check to see i
 
 ### Static Files
 
-The Nginx server is configured to serve static files, add the `STATIC_ROOT` setting to `settings.py` so the Django knows where to collect static files:
+The Nginx server is configured to serve static files, add the `STATIC_ROOT` and `STATIC_URL` settings to `settings.py` so the Django knows where to collect static files. If this server is going to support uploading files, this a good time/ place to set up `MEDIA_ROOT` and `MEDIA_URL`. Replace any existing file settings with the following:
 
     STATIC_ROOT = '/var/www/static/'
+    STATIC_URL = '/static/'
+
+    MEDIA_ROOT = '/var/www/media/'  # Optional to support file uploads
+    MEDIA_URL = '/media/'           # Optional to support file uploads
 
 At this point, the django setup is complete and you can get started with working on your actual django code. You can stop the docker containers and run them in the background with `docker-compose up -d`.
 
