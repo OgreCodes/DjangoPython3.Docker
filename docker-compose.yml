@@ -1,6 +1,6 @@
 version: '2'
 services:
-  django:
+  trails:
     build: .
     command: supervisord -n
     volumes:
@@ -10,18 +10,4 @@ services:
       - ./supervisor-confd:/etc/supervisor/conf.d
     ports:
       - "80:80"
-    # links:
-    #   - db:db
-    container_name: django
-  # db:
-  #   image: mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: i.am.groot
-  #     MYSQL_DATABASE: django
-  #     MYSQL_USER: django
-  #     MYSQL_PASSWORD: g.r.o.o.t.
-  #   volumes:
-  #     - ./mysql-confd:/etc/mysql/conf.d
-  #     - ./mysql-data:/var/lib/mysql
-  #   container_name: db
-
+    container_name: trails
