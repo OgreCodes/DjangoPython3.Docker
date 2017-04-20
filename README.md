@@ -1,4 +1,4 @@
-# Django, MySQL, uWSGI, and NGINX Docker Environment
+# Django/ uWSGI on Python 3 Docker Environment
 
 - [Introduction](#introduction)
   - [Assumptions](#assumptions)
@@ -6,30 +6,30 @@
 - [Getting Started](#basic-setup)
   - [Create the Django Project](#create-the-django-project)
   - [uWSGI Setup](#connect-uwsgi-to-your-project)
-  - [MySQL Server](#mysql-server) (Optional)
   - [Initial Migration](#initial-migration)
   - [Static Files](#static-files)
 - [Maintenance](#managing-your-environment)
   - [Using Manage.py from outside the container](#run-managepy-commands-from-outside-the-container)
   - [Restart uWSGI](#restart-uwsgi-after-a-source-change)
-  - [MySQL command prompt](#the-mysql-prompt)
-
+  
 # Introduction
 
-This is a complete Django app environment with everything you need to deploy a complete Django server on Docker (everything including the kitchen sink). I created it as a fast way for myself and team-mates to set up a consistent Django environment for testing and development on our local computers. It works exceptionally well on MacOS and Linux, and can be adapted for Windows with a few minor tweaks. This document is designed to walk through all the steps required to get a complete environment up and running quickly (10-15 minutes).
+This is a complete Django app environment with everything you need to deploy a complete Python 3 based Django server on Docker. This is based on my original "[Kitchen Sink](https://github.com/OgreCodes/DjangoKitchenSinkDocker)" Django environment however the optional MySQL integration has been eliminated and support for GeoDjango added.
 
-There are 2 containers to make it a little more modular. There is one container with Django, Nginx, and uWSGI managed via supervisord and a second container based on the stock MySQL container. The way this app is laid out, code and most configuration happens from outside the docker containers and so the django app and associated files can be edited live without rebuilding the docker container. You can also restart uwsgi or collect static files without a rebuild. The only configuration which does require a rebuild is actual changes to your python libraries via pip. 
+These instructions walk through all the steps required to get a complete environment up and running quickly (10-15 minutes).
+
+The app is laid out so the container only needs to be rebuilt if requirements.txt is changed or additional software is added to the image via apt-get. Because this setup uses supervisord to manage uWSGI and NGinx, either service can be safely restarted without restarting the container. You can also collect static files without a rebuild.
+
+Static files and media are served up by NGinx which makes this much more robust than simply using runserver. This image should be suitable for a small production django setup. 
 
 ## Assumptions
 
-This guide is written with the assumption the reader understands the Unix command line and the basics of using docker. Familiarity with MySQL and Django is also very helpful. This guide also assumes you have a functioning docker environment with at least 1 GB of free drive space.
+This guide is written with the assumption the reader understands the Unix command line and the basics of using docker. Familiarity with Django is also very helpful. This guide also assumes you have a functioning docker environment with at least 1 GB of free drive space.
 
 ## Structure
 
     requirements.txt - pip configuration for Django server
     code/ - This is where your django project will live
-    mysql-confd/ - Customize your MySQL Server here
-    mysql-data/ - MySQL data files.      
     nginx-sites-available/ - NGinx site configuration
     supervisor-confd/ - Startup configuration for Nginx and uWSGI
     www/ - Static files served by Nginx
@@ -65,41 +65,11 @@ In order for uwsgi to talk to the django project, the `uwsgi.ini` file in the dj
     # Change this to your wsgi module. Probably "projectname.wsgi".
     module          = <projectname>.wsgi:application
 
-### MySQL Server
-
-**Note:** *Setting up MySQL Server is optional. If MySQL isn't required, skip to [Creating the Initial Django Migration](#creating-the-initial-migration) and Django will automatically create an SQLLite database in the topmost folder of the django project.*
-
-To set up MySQL, stop the django container with `CTRL-C` or `docker-compose stop`; then open `docker-compose.yml` and uncomment the db settings and the links section under the django settings and set the database name, user, and password. 
-
-    MYSQL_ROOT_PASSWORD: <New MySQL Root Password>
-    MYSQL_DATABASE: django
-    MYSQL_USER: django
-    MYSQL_PASSWORD: <New User Password>
-
-**Note:** *Careful when uncommenting those lines, YML is very picky about indent levels.*
-
-Next, edit `settings.py` (likely `code/<projectname>/<projectname>/settings.py`) and paste the following in place of the existing `DATABASES` section, using the user password set above. Carry any database name or username settings forward as well: 
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'django',
-            'USER': 'django',
-            'PASSWORD': '<New User Password>',
-            'HOST': 'db',
-            'PORT': '',
-        }
-    }
-
-Now bring the complete docker/ MySQL environment up:
-
-    $ docker-compose up
-
-On first start, MySQL takes a bit longer to start because it's creating the database structure. 
+Once you've made these changes, hit control-C in the window where your docker container is running to stop it, then restart it with `docker-compose up`. If uWSGI starts with no obvious errors this time, you can stop the container running in the foreground and restart it in detached mode with `docker-compose up -d`.
 
 ### Initial Migration
 
-Docker is still in the foreground so fire up another terminal and check to see if everything is connected properly by running the initial django migrations:
+With the the container running, open, get a command prompt inside the container and run the initial Django migrations:
 
     $ docker exec -it django /bin/bash
 
@@ -116,7 +86,7 @@ The Nginx server is configured to serve static files, add the `STATIC_ROOT` and 
     MEDIA_ROOT = '/var/www/media/'  # Optional to support file uploads
     MEDIA_URL = '/media/'           # Optional to support file uploads
 
-At this point, the django setup is complete and you can get started with working on your actual django code. You can stop the docker containers and run them in the background with `docker-compose up -d`.
+At this point, the Django setup is complete and you can get started with working on your actual django code. 
 
 ## Managing your environment
 
@@ -145,8 +115,4 @@ Run a migration:
 Collect Static Files:
 
     docker exec django python projectname/manage.py collectstatic
-
-#### The MySQL Prompt:
-
-    docker exec db mysql -udjango -p django
 

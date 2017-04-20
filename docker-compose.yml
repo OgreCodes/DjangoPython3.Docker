@@ -1,6 +1,6 @@
 version: '2'
 services:
-  trails:
+  django:
     build: .
     command: supervisord -n
     volumes:
@@ -10,4 +10,4 @@ services:
       - ./supervisor-confd:/etc/supervisor/conf.d
     ports:
       - "80:80"
-    container_name: trails
+    container_name: django
